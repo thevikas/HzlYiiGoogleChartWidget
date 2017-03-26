@@ -43,6 +43,12 @@ class HzlVisualizationChart extends CWidget {
     public $options = array();
 
     /**
+     * @var string On select JS handler
+     * @see https://developers.google.com/chart/interactive/docs/reference#events
+     */
+    public $onselect = '';
+
+    /**
      * @var array $htmlOption the HTML tag attributes configuration
      */
     public $htmlOptions = array();
@@ -66,19 +72,36 @@ class HzlVisualizationChart extends CWidget {
      */
     public function registerClientScript() {
         $id = $this->getId();
-        $jsData = CJavaScript::jsonEncode($this->data);
+        if(!empty($this->data['cols']) && !empty($this->data['rows']))
+        {
+            $dataTableJS = "var data = new google.visualization.DataTable();\n";
+            foreach($this->data['cols'] as $col)
+            {
+                $dataTableJS .= "data.addColumn('{$col['type']}', '{$col['label']}');\n";
+            }
+            $dataTableJS .= "data.addRows(" . CJavaScript::jsonEncode($this->data['rows']) . ");\n";
+        }
+        else
+        {
+            $jsData = CJavaScript::jsonEncode($this->data);
+            $dataTableJS = ' var data = google.visualization.arrayToDataTable(' . $jsData . ");\n";
+        }
         $jsOptions = CJavaScript::jsonEncode($this->options);
+        $handlerjs = '';
+
+        if(!empty($this->onselect))
+        	$handlerjs = "google.visualization.events.addListener($id, 'select', {$this->onselect});";
 
         $script = '
 			google.setOnLoadCallback(drawChart' . $id . ');
 			var ' . $id . '=null;
 			function drawChart' . $id . '() {
-				var data = google.visualization.arrayToDataTable(' . $jsData . ');
-
+				' . $dataTableJS . '
 				var options = ' . $jsOptions . ';
 
 				' . $id . ' = new google.visualization.' . $this->visualization . '(document.getElementById("' . $this->containerId . '"));
 				' . $id . '.draw(data, options);
+				' . $handlerjs . '
 			}';
 
         /** @var $cs CClientScript */
