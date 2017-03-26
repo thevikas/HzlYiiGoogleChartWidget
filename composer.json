@@ -1,0 +1,8 @@
+{
+    "name": "thevikas/HzlYiiGoogleChartWidget",
+    "autoload": {
+        "psr-0" : {
+            "thevikas\\googlechart" : "src"
+        }
+    }
+}
