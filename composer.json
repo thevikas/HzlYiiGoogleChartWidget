@@ -1,8 +1,13 @@
 {
     "name": "thevikas/hzl-yii-google-chart-widget",
+    "minimum-stability": "stable",
+    "license": "BSD",
     "autoload": {
         "psr-0" : {
             "thevikas\\googlechart" : "src"
         }
+    },
+    "require": {
+        "php": ">=5.4.0",
     }
 }
