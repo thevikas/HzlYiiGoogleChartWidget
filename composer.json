@@ -1,5 +1,5 @@
 {
-    "name": "thevikas/HzlYiiGoogleChartWidget",
+    "name": "thevikas/hzl-yii-google-chart-widget",
     "autoload": {
         "psr-0" : {
             "thevikas\\googlechart" : "src"
